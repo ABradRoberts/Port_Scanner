@@ -1,11 +1,12 @@
 CC=g++
 CFLAGS=-Wall -Werror 
 
-BIN=scanner
+BIN=main
+EXE=scan
 EXT=cpp
 
 make: $(BIN).$(EXT)
-	$(CC) $(BIN).$(EXT) $(CFLAGS) -o $(BIN)
+	$(CC) $(BIN).$(EXT) $(CFLAGS) -o $(EXE)
 
 clean:
 	rm -f $(BIN)
