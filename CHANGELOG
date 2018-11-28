@@ -143,4 +143,6 @@ November 27, 2018 6:00PM - Started error checking and flags
 November 27, 2018 8:00PM - Wrote a test.sh script to run a ton of different inputs to make sure I have no errors.
 November 27, 2018 9:00PM - test.sh is amazing and I'm amazing for making it. Tested a TON of different ways to use this and everything works perfectly with no memory leaks (i mean i'm pretty sure it wasnt possible anyway but whatever.)
 November 27, 2018 10:45PM - Holy crap writing a pretty README, because i'm actually proud of this assignment, has taken almost 2 hours...
-November 27, 2018 11:00PM - Finished. Turning in.
+November 27, 2018 11:30PM - Added a ping to make sure targets are online
+November 27, 2018 11:45PM - Finished. Turning in.
+
