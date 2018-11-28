@@ -3,4 +3,4 @@ project(Port_Scanner)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Port_Scanner main.cpp)
+add_executable(Port_Scanner src/main.cpp)

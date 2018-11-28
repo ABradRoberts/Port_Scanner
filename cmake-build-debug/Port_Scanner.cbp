@@ -84,7 +84,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/brad/CLionProjects/Port_Scanner/main.cpp">
+		<Unit filename="/home/brad/CLionProjects/Port_Scanner/src/main.cpp">
 			<Option target="Port_Scanner"/>
 		</Unit>
 		<Unit filename="/home/brad/CLionProjects/Port_Scanner/CMakeLists.txt">

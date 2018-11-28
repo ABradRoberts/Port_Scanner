@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Port_Scanner.dir/main.cpp.o"
+  "CMakeFiles/Port_Scanner.dir/src/main.cpp.o"
   "Port_Scanner.pdb"
   "Port_Scanner"
 )

@@ -57,27 +57,27 @@ include CMakeFiles/Port_Scanner.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Port_Scanner.dir/flags.make
 
-CMakeFiles/Port_Scanner.dir/main.cpp.o: CMakeFiles/Port_Scanner.dir/flags.make
-CMakeFiles/Port_Scanner.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/brad/CLionProjects/Port_Scanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Port_Scanner.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Port_Scanner.dir/main.cpp.o -c /home/brad/CLionProjects/Port_Scanner/main.cpp
+CMakeFiles/Port_Scanner.dir/src/main.cpp.o: CMakeFiles/Port_Scanner.dir/flags.make
+CMakeFiles/Port_Scanner.dir/src/main.cpp.o: ../src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/brad/CLionProjects/Port_Scanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Port_Scanner.dir/src/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Port_Scanner.dir/src/main.cpp.o -c /home/brad/CLionProjects/Port_Scanner/src/main.cpp
 
-CMakeFiles/Port_Scanner.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Port_Scanner.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/brad/CLionProjects/Port_Scanner/main.cpp > CMakeFiles/Port_Scanner.dir/main.cpp.i
+CMakeFiles/Port_Scanner.dir/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Port_Scanner.dir/src/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/brad/CLionProjects/Port_Scanner/src/main.cpp > CMakeFiles/Port_Scanner.dir/src/main.cpp.i
 
-CMakeFiles/Port_Scanner.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Port_Scanner.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/brad/CLionProjects/Port_Scanner/main.cpp -o CMakeFiles/Port_Scanner.dir/main.cpp.s
+CMakeFiles/Port_Scanner.dir/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Port_Scanner.dir/src/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/brad/CLionProjects/Port_Scanner/src/main.cpp -o CMakeFiles/Port_Scanner.dir/src/main.cpp.s
 
 # Object files for target Port_Scanner
 Port_Scanner_OBJECTS = \
-"CMakeFiles/Port_Scanner.dir/main.cpp.o"
+"CMakeFiles/Port_Scanner.dir/src/main.cpp.o"
 
 # External object files for target Port_Scanner
 Port_Scanner_EXTERNAL_OBJECTS =
 
-Port_Scanner: CMakeFiles/Port_Scanner.dir/main.cpp.o
+Port_Scanner: CMakeFiles/Port_Scanner.dir/src/main.cpp.o
 Port_Scanner: CMakeFiles/Port_Scanner.dir/build.make
 Port_Scanner: CMakeFiles/Port_Scanner.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/brad/CLionProjects/Port_Scanner/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable Port_Scanner"
