@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 static bool port_open(std::string ip, uint16_t port);
 
@@ -153,24 +154,31 @@ int main(int argc, char *argv[]){
    int count = 0;
 
    if(target_set) {
-        if(port == 0) {
-            std::cout << "Scanning " << target_ip << " for 1000 most common ports." << std::endl << std::endl;
-            for (uint16_t ports : common_ports) {
-                if (port_open(target_ip, ports)) {
+
+        int ping = system(("ping -c 1 " + target_ip + "| grep -q \"Unreachable\"").c_str());
+
+        if (ping == 256) {
+            if (port == 0) {
+                std::cout << "Scanning " << target_ip << " for 1000 most common ports." << std::endl << std::endl;
+                for (uint16_t ports : common_ports) {
+                    if (port_open(target_ip, ports)) {
+                        scanned = true;
+                        count++;
+                        std::cout << "Port: " << ports << " is open." << std::endl;
+                    }
+                }
+            } else if (port > 0) {
+                std::cout << "Scanning " << target_ip << " port " << port << "." << std::endl << std::endl;
+                if (port_open(target_ip, port)) {
                     scanned = true;
                     count++;
-                    std::cout << "Port: " << ports << " is open." << std::endl;
+                    std::cout << "Port: " << port << " is open." << std::endl;
+                } else {
+                    std::cout << "Port: " << port << " is closed." << std::endl;
                 }
             }
-        } else if (port > 0){
-            std::cout << "Scanning " << target_ip << " port " << port << "."<< std::endl << std::endl;
-            if(port_open(target_ip, port)){
-                scanned = true;
-                count++;
-                std::cout << "Port: " << port << " is open." << std::endl;
-            } else {
-                std::cout << "Port: " << port << " is closed." << std::endl;
-            }
+        } else {
+            std::cout << "Unable to ping target. Target is either down or blocking ping probes." << std::endl;
         }
 
         if (scanned) {
@@ -205,7 +213,7 @@ static bool port_open(std::string ip, u_int16_t port){
 
     FD_ZERO(&fd);
     FD_SET(sock, &fd);
-    tv.tv_sec = 10;
+    tv.tv_sec = 2;
 
     if(select(sock+1, nullptr , &fd, nullptr, &tv) == 1){
         socklen_t len = sizeof(int);
