@@ -19,8 +19,7 @@ static bool port_open(std::string ip, uint16_t port);
 struct sockaddr_in address;
 struct timeval tv;
 
-uint16_t common_ports[] =
-        {
+uint16_t common_ports[] = {
                       1,3,4,6,7,9,13,17,19,20,21,22,23,24,25,26,30,32,33,37,42,43,49,53,70,79,80,81,82,83,84,85,88,89,
                       90,99,100,106,109,110,111,113,119,125,135,139,143,144,146,161,163,179,199,211,212,222,254,255,256,
                       259,264,280,301,306,311,340,366,389,406,407,416,417,425,427,443,444,445,458,464,465,481,497,500,
@@ -76,54 +75,82 @@ uint16_t common_ports[] =
                       63331,64623,64680,65000,65129,65389
 };
 
+std::string usage = "Usage:\n";
+
 int main(int argc, char *argv[]){
     std::string target_ip;
-    uint16_t target_port;
     uint16_t i;
-    std::string target_test;
-    uint16_t port_test;
+    int port = 0;
+    bool target_set = false;
+    struct sockaddr_in sa;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (argc > 1) {
+   if (argc > 1) {
         for (i = 1; i < argc; i++) {
-            if (argv[i][0] == '-') { /* All switches start with a dash */
+            if (argv[i][0] == '-') {
                 switch (argv[i][1]) {
                     case 'p':
-                        if(!atoi(argv[i+1])){
+                        port = atoi(argv[i+1]);
+
+                        if(port < 1 || port > 65535){
                             std::cout << "Invalid port number. Please enter an integer between 1 - 65535." << std::endl;
+                        } else {
+                            port = (uint16_t)atoi(argv[i+1]);
                         }
-                        port_test = (uint16_t)atoi(argv[i+1]);
-                        std::cout << "Port = " << port_test << std::endl;
                         break;
+
                     case 't':
                         target_ip = argv[i+1];
-                        std::cout << "Target = " << target_test << std::endl;
-                    default:
+                        if(inet_pton(AF_INET, target_ip.c_str(), &sa.sin_addr)){
+                            target_set = true;
+                        }
                         break;
-                }
-            } else { /* No dash */
 
+                    default:
+                        std::cout << usage << std::endl;
+                        return -1;
+                }
             }
         }
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   }
 
 
-    bool scanned = false;
+   bool scanned = false;
+   int count = 0;
 
-    for(uint16_t x : common_ports){
-        target_port = x;
-        if(port_open(target_ip, target_port)){
-            scanned = true;
-            std::cout << "Port: " << target_port << " is open." << std::endl;
+   if(target_set) {
+        if(port == 0) {
+            std::cout << "Scanning " << target_ip << " for 1000 most common ports." << std::endl << std::endl;
+            for (uint16_t ports : common_ports) {
+                if (port_open(target_ip, ports)) {
+                    scanned = true;
+                    count++;
+                    std::cout << "Port: " << ports << " is open." << std::endl;
+                }
+            }
+        } else {
+            std::cout << "Scanning " << target_ip << " port " << port << "."<< std::endl << std::endl;
+            if(port_open(target_ip, port)){
+                scanned = true;
+                count++;
+                std::cout << "Port: " << port << " is open." << std::endl;
+            } else {
+                std::cout << "Port: " << port << " is closed." << std::endl;
+            }
         }
-    }
 
-    if(!scanned){
-        std::cout << "Nothing scanned." << std::endl;
-    }
+        if (!scanned && port != 0) {
+            std::cout << std::endl << "No open ports." << std::endl;
+        } else {
+            std::cout << std::endl<< "Number of opened ports: " << count << std::endl;
+        }
+   }
 
-    return 0;
+   if(!target_set){
+       std::cout << "Error - Invalid IP address. Please enter a valid IPv4 address." << std::endl << std::endl << usage
+       << std::endl;
+   }
+
+   return 0;
 }
 
 
