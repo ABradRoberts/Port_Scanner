@@ -1,27 +1,30 @@
-# Port_Scanner_CPP
----
-### AUTHOR
+Port_Scanner_C++
+----------------
+AUTHOR
 	 Allen Bradley Roberts
 
-### NAME
+NAME
 	 scan - Scans a target IP address for open ports.
 
-### SYNOPSIS
+SYNOPSIS
 	 ./scan [FLAGS]
 
-### FLAG SUMMARY
+FLAG SUMMARY
 	 -t <target IP>: Sets target IP. Works with IPv4 only. (Required)
 	 -p <target port>: Scans a specific port number. (Optional)
 
-### EXAMPLES
+EXAMPLES
 	 ./scan -t 127.0.0.1
 		 Scans 127.0.0.1 for the 1000 most common ports.
 
 	 ./scan -t 127.0.0.1 -p 80
 		 Scans 127.0.0.1 for port 80.
 
---- 
 
 I created a port scanner in python several months ago for fun and figured porting this to C++ would be a good project.
 Python was way easier... I was able to find an algorithm on StackOverflow for the logic to check is a port is open. I
-was able to improve that and add my own logic to handle the 2 flags and user-input errors. 
+was able to improve that and add my own logic to handle the 2 flags and user-input errors.
+
+Running this with a target IP and no port scans the 1000 most common ports according to nmap. This does NOT handle port
+ranges such as 1-100. With the -p option with a valid port number only scans that specific port. Having multiple -t or
+-p flags does not work, it just exits.
