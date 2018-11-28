@@ -1,17 +1,7 @@
-#include <sys/socket.h>
-#include <sys/time.h>
-#include <sys/types.h>
 #include <arpa/inet.h>
-#include <netinet/in.h>
 #include <iostream>
-#include <string>
-#include <errno.h>
 #include <fcntl.h>
-#include <stdio.h>
-#include <netdb.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
 
 static bool port_open(std::string ip, uint16_t port);
 
@@ -75,7 +65,20 @@ uint16_t common_ports[] = {
                       63331,64623,64680,65000,65129,65389
 };
 
-std::string usage = "Usage:\n";
+std::string usage = "AUTHOR\n"
+                    "\t Allen Bradley Roberts\n\n"
+                    "NAME\n"
+                    "\t scan - Scans a target IP address for open ports.\n\n"
+                    "SYNOPSIS\n"
+                    "\t ./scan [FLAGS]\n\n"
+                    "FLAG SUMMARY\n"
+                    "\t -t <target IP>: Sets target IP. Works with IPv4 only. (Required) \n"
+                    "\t -p <target port>: Scans a specific port number. (Optional)\n\n"
+                    "EXAMPLES\n"
+                    "\t ./scan -t 127.0.0.1\n"
+                    "\t\t Scans 127.0.0.1 for the 1000 most common ports.\n\n"
+                    "\t ./scan -t 127.0.0.1 -p 80\n"
+                    "\t\t Scans 127.0.0.1 for port 80.\n\n";
 
 int main(int argc, char *argv[]){
     std::string target_ip;
@@ -83,34 +86,66 @@ int main(int argc, char *argv[]){
     int port = 0;
     bool target_set = false;
     struct sockaddr_in sa;
+    bool t = false;
+    bool p = false;
 
    if (argc > 1) {
         for (i = 1; i < argc; i++) {
             if (argv[i][0] == '-') {
                 switch (argv[i][1]) {
                     case 'p':
-                        port = atoi(argv[i+1]);
+                        if(argv[i][2]){
+                            std::cout << "Invalid input. A space is required between -p and the port number."
+                                      << std::endl
+                                      << "Run ./scan without any arguments to display usage." << std::endl;
+                            return -1;
+                        }else if (p) {
+                            std::cout << "Haha nice try... just use it normally, stop trying to find holes in this..."
+                            << std::endl;
+                            return -1;
+                        }else {
+                                port = atoi(argv[i + 1]);
 
-                        if(port < 1 || port > 65535){
-                            std::cout << "Invalid port number. Please enter an integer between 1 - 65535." << std::endl;
-                        } else {
-                            port = (uint16_t)atoi(argv[i+1]);
+                                if (port < 1 || port > 65535) {
+                                    std::cout << "Invalid port number. Please enter an integer between 1 - 65535."
+                                    << std::endl
+                                    << "Run ./scan without any arguments to display usage." << std::endl;
+                                    port = -1;
+                                } else {
+                                    port = (uint16_t) atoi(argv[i + 1]);
+                                }
                         }
+
+                        p = true;
                         break;
 
                     case 't':
-                        target_ip = argv[i+1];
-                        if(inet_pton(AF_INET, target_ip.c_str(), &sa.sin_addr)){
-                            target_set = true;
-                        }
+                        if(argv[i][2]){
+                            std::cout << "Invalid input. A space is required between -t and the port number."
+                                      << std::endl
+                                      << "Run ./scan without any arguments to display usage." << std::endl;
+                            return -1;
+                        }else if(t) {
+                            std::cout << "Haha nice try... just use it normally, stop trying to find holes in this..."
+                                      << std::endl;
+                            return -1;
+                        }else {
+                                target_ip = argv[i + 1];
+                                if (inet_pton(AF_INET, target_ip.c_str(), &sa.sin_addr)) {
+                                    target_set = true;
+                                }
+                            }
+
+                        t = true;
                         break;
 
                     default:
-                        std::cout << usage << std::endl;
                         return -1;
                 }
             }
         }
+   } else {
+       std::cout << usage << std::endl;
    }
 
 
@@ -127,7 +162,7 @@ int main(int argc, char *argv[]){
                     std::cout << "Port: " << ports << " is open." << std::endl;
                 }
             }
-        } else {
+        } else if (port > 0){
             std::cout << "Scanning " << target_ip << " port " << port << "."<< std::endl << std::endl;
             if(port_open(target_ip, port)){
                 scanned = true;
@@ -138,17 +173,17 @@ int main(int argc, char *argv[]){
             }
         }
 
-        if (!scanned && port != 0) {
-            std::cout << std::endl << "No open ports." << std::endl;
-        } else {
+        if (scanned) {
             std::cout << std::endl<< "Number of opened ports: " << count << std::endl;
         }
    }
 
-   if(!target_set){
-       std::cout << "Error - Invalid IP address. Please enter a valid IPv4 address." << std::endl << std::endl << usage
-       << std::endl;
+   if(!target_set && argc > 1){
+       std::cout << "Error - Invalid IP address. Please enter a valid IPv4 address." <<
+       std::endl << "Run ./scan without any arguments to display usage." << std::endl;
    }
+
+   std::cout << std::endl <<"Finished." << std::endl;
 
    return 0;
 }
