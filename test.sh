@@ -60,4 +60,7 @@ echo ./scan -p 80 -t 192.168.1.1 -p 81
 echo ./scan -p 80  -t 192.168.1.1 -t 127.0.0.1
 ./scan -p 80  -t 192.168.1.1 -t 127.0.0.1
 
+echo ./scan -t 192.168.1.100
+./scan -t 192.168.1.100
+
 echo "FINISHED TESTS"

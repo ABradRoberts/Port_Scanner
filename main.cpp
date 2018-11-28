@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
 
    if(target_set) {
 
-        int ping = system(("ping -c 1 " + target_ip + "| grep -q \"Unreachable\"").c_str());
+        int ping = system(("ping -c 1 " + target_ip + "| grep -q \"0 received\"").c_str());
 
         if (ping == 256) {
             if (port == 0) {
