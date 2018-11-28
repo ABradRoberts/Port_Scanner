@@ -9,4 +9,4 @@ make: $(BIN).$(EXT)
 	$(CC) $(BIN).$(EXT) $(CFLAGS) -o $(EXE)
 
 clean:
-	rm -f $(BIN)
+	rm -f $(EXE)
