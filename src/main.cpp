@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 static bool port_open(std::string ip, uint16_t port);
+static int host_up(std::string ip);
+static void run_scan(std::string ip, uint16_t port);
 
 
 struct sockaddr_in address;
@@ -101,8 +103,7 @@ int main(int argc, char *argv[]){
                                       << "Run ./scan without any arguments to display usage." << std::endl;
                             return -1;
                         }else if (p) {
-                            std::cout << "Haha nice try... just use it normally, stop trying to find holes in this..."
-                            << std::endl;
+                            std::cout << "Error - Invalid arguemts. Please only use one port flag." << std::endl;
                             return -1;
                         }else {
                                 port = atoi(argv[i + 1]);
@@ -127,7 +128,7 @@ int main(int argc, char *argv[]){
                                       << "Run ./scan without any arguments to display usage." << std::endl;
                             return -1;
                         }else if(t) {
-                            std::cout << "Haha nice try... just use it normally, stop trying to find holes in this..."
+                            std::cout << "Error - Invalid arguments. Please only use one target flag."
                                       << std::endl;
                             return -1;
                         }else {
@@ -141,6 +142,8 @@ int main(int argc, char *argv[]){
                         break;
 
                     default:
+                        std::cout << "Invalid Arguments." << std::endl << "Run ./scan without any arguments to display"
+                                                                          "usage." << std::endl;
                         return -1;
                 }
             }
@@ -150,40 +153,8 @@ int main(int argc, char *argv[]){
    }
 
 
-   bool scanned = false;
-   int count = 0;
-
    if(target_set) {
-
-        int ping = system(("ping -c 1 " + target_ip + "| grep -q \"0 received\"").c_str());
-
-        if (ping == 256) {
-            if (port == 0) {
-                std::cout << "Scanning " << target_ip << " for 1000 most common ports." << std::endl << std::endl;
-                for (uint16_t ports : common_ports) {
-                    if (port_open(target_ip, ports)) {
-                        scanned = true;
-                        count++;
-                        std::cout << "Port: " << ports << " is open." << std::endl;
-                    }
-                }
-            } else if (port > 0) {
-                std::cout << "Scanning " << target_ip << " port " << port << "." << std::endl << std::endl;
-                if (port_open(target_ip, port)) {
-                    scanned = true;
-                    count++;
-                    std::cout << "Port: " << port << " is open." << std::endl;
-                } else {
-                    std::cout << "Port: " << port << " is closed." << std::endl;
-                }
-            }
-        } else {
-            std::cout << "Unable to ping target. Target is either down or blocking ping probes." << std::endl;
-        }
-
-        if (scanned) {
-            std::cout << std::endl<< "Number of opened ports: " << count << std::endl;
-        }
+       run_scan(target_ip, port);
    }
 
    if(!target_set && argc > 1){
@@ -197,7 +168,43 @@ int main(int argc, char *argv[]){
 }
 
 
-static bool port_open(std::string ip, u_int16_t port){
+static void run_scan(std::string ip, uint16_t port){
+    bool scanned = false;
+    int count = 0;
+
+    //int ping = system(("ping -c 1 " + target_ip + "| grep -q \"0 received\"").c_str());
+    // I thought this was super clever but might have not worked depending on OS... not sure...
+
+    if (host_up(ip) == 1) {
+        if (port == 0) {
+            std::cout << "Scanning " << ip << " for 1000 most common ports." << std::endl << std::endl;
+            for (uint16_t ports : common_ports) {
+                if (port_open(ip, ports)) {
+                    scanned = true;
+                    count++;
+                    std::cout << "Port: " << ports << " is open." << std::endl;
+                }
+            }
+        } else if (port > 0) {
+            std::cout << "Scanning " << ip << " port " << port << "." << std::endl << std::endl;
+            if (port_open(ip, port)) {
+                scanned = true;
+                count++;
+                std::cout << "Port: " << port << " is open." << std::endl;
+            } else {
+                std::cout << "Port: " << port << " is closed." << std::endl;
+            }
+        }
+    } else {
+        std::cout << "Unable to connect to target. Target is either down or blocking ping probes." << std::endl;
+    }
+
+    if (scanned) {
+        std::cout << std::endl<< "Number of opened ports: " << count << std::endl;
+    }
+}
+
+static bool port_open(std::string ip, uint16_t port){
     int sock;
     int error = -1;
     fd_set fd;
@@ -223,4 +230,24 @@ static bool port_open(std::string ip, u_int16_t port){
     }
 
     return !error;
+}
+
+
+static int host_up(std::string ip){
+    int sock;
+    fd_set fd;
+
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr(ip.c_str());
+
+    sock = socket(AF_INET, SOCK_STREAM, 0);
+    fcntl(sock, F_SETFL, O_NONBLOCK);
+
+    connect(sock, (struct sockaddr *)&address, sizeof(address));
+
+    FD_ZERO(&fd);
+    FD_SET(sock, &fd);
+    tv.tv_sec = 2;
+
+    return select(sock+1, nullptr , &fd, nullptr, &tv);
 }
