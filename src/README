@@ -27,4 +27,4 @@ was able to improve that and add my own logic to handle the 2 flags and user-inp
 
 Running this with a target IP and no port scans the 1000 most common ports according to nmap. This does NOT handle port
 ranges such as 1-100. With the -p option with a valid port number only scans that specific port. Having multiple -t or
--p flags does not work, it just exits.
+-p flags does not work, it just exits the program.
