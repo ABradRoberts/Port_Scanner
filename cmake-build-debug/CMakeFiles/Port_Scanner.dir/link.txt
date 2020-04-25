@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/Port_Scanner.dir/src/main.cpp.o  -o Port_Scanner 
