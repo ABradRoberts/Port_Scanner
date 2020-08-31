@@ -12,6 +12,7 @@ static void run_scan(std::string ip, uint16_t port);
 struct sockaddr_in address;
 struct timeval tv;
 
+// This is just gross...
 uint16_t common_ports[] = {
                       1,3,4,6,7,9,13,17,19,20,21,22,23,24,25,26,30,32,33,37,42,43,49,53,70,79,80,81,82,83,84,85,88,89,
                       90,99,100,106,109,110,111,113,119,125,135,139,143,144,146,161,163,179,199,211,212,222,254,255,256,
@@ -232,7 +233,7 @@ static bool port_open(std::string ip, uint16_t port){
     return !error;
 }
 
-
+// Turn out this just returns true like every time. So... it's worthless. Prolly need to send an ICMP packet or something.
 static int host_up(std::string ip){
     int sock;
     fd_set fd;
